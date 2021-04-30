@@ -1,3 +1,7 @@
 domain: github.com
 repo: github.com/snlndod/Operator-101
+resources:
+- group: batch
+  kind: CronJob
+  version: v1
 version: "2"
