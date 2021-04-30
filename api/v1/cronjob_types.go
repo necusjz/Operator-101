@@ -17,6 +17,8 @@ limitations under the License.
 package v1
 
 import (
+	batchv1beta1 "k8s.io/api/batch/v1beta1"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -28,14 +30,31 @@ type CronJobSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of CronJob. Edit CronJob_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	Schedule string `json:"schedule"`
+	StartingDeadlineSeconds *int64 `json:"startingDeadlineSeconds,omitempty"`
+	ConcurrencyPolicy ConcurrencyPolicy `json:"concurrencyPolicy,omitempty"`
+	Suspend *bool `json:"suspend,omitempty"`
+	JobTemplate batchv1beta1.JobTemplateSpec `json:"jobTemplate"`
+	SuccessfulJobsHistoryLimit *int32 `json:"successfulJobsHistoryLimit,omitempty"`
+	FailedJobsHistoryLimit *int32 `json:"failedJobsHistoryLimit,omitempty"`
 }
+
+// ConcurrencyPolicy describes how the job will be handled
+type ConcurrencyPolicy string
+
+const (
+	AllowConcurrent ConcurrencyPolicy = "Allow"
+	ForbidConcurrent ConcurrencyPolicy = "Forbid"
+	ReplaceConcurrent ConcurrencyPolicy = "Replace"
+)
 
 // CronJobStatus defines the observed state of CronJob
 type CronJobStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+
+	Active []corev1.ObjectReference `json:"active,omitempty"`
+	LastScheduleTime *metav1.Time `json:"lastScheduleTime,omitempty"`
 }
 
 // +kubebuilder:object:root=true
