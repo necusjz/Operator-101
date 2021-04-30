@@ -81,8 +81,27 @@ func (r *CronJobReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	var successfulJobs []*kbatch.Job
 	var failedJobs []*kbatch.Job
 	var mostRecentTime *time.Time
-	isJobFinished
-	getScheduledTimeForJob
+	isJobFinished := func(job *kbatch.Job) (bool, kbatch.JobConditionType) {
+		for _, c := range job.Status.Conditions {
+			if (c.Type == kbatch.JobComplete || c.Type == kbatch.JobFailed) && c.Status == corev1.ConditionTrue {
+				return true, c.Type
+			}
+		}
+
+		return false, ""
+	}
+	getScheduledTimeForJob := func(job *kbatch.Job) (*time.Time, error) {
+		timeRaw := job.Annotations[scheduledTimeAnnotation]
+		if len(timeRaw) == 0 {
+			return nil, nil
+		}
+
+		timeParsed, err := time.Parse(time.RFC3339, timeRaw)
+		if err != nil {
+			return nil, err
+		}
+		return &timeParsed, nil
+	}
 	for i, job := range childJobs.Items {
 		_, finishedType := isJobFinished(&job)
 		switch finishedType {
@@ -231,6 +250,32 @@ func (r *CronJobReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 				return ctrl.Result{}, err
 			}
 		}
+	}
+	constructJobForCronJob := func(cronJob *batchv1.CronJob, scheduledTime time.Time) (*kbatch.Job, error) {
+		// We want job names for a given nominal start time to have a deterministic name to avoid the same job being created twice
+		name := fmt.Sprintf("%s-%d", cronJob.Name, scheduledTime.Unix())
+
+		job := &kbatch.Job{
+			ObjectMeta: metav1.ObjectMeta{
+				Labels:      make(map[string]string),
+				Annotations: make(map[string]string),
+				Name:        name,
+				Namespace:   cronJob.Namespace,
+			},
+			Spec: *cronJob.Spec.JobTemplate.Spec.DeepCopy(),
+		}
+		for k, v := range cronJob.Spec.JobTemplate.Annotations {
+			job.Annotations[k] = v
+		}
+		job.Annotations[scheduledTimeAnnotation] = scheduledTime.Format(time.RFC3339)
+		for k, v := range cronJob.Spec.JobTemplate.Labels {
+			job.Labels[k] = v
+		}
+		if err := ctrl.SetControllerReference(cronJob, job, r.Scheme); err != nil {
+			return nil, err
+		}
+
+		return job, nil
 	}
 	job, err := constructJobForCronJob(&cronJob, missedRun)
 	if err != nil {
