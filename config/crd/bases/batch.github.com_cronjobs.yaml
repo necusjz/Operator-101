@@ -38,9 +38,14 @@ spec:
             properties:
               concurrencyPolicy:
                 description: ConcurrencyPolicy describes how the job will be handled
+                enum:
+                - Allow
+                - Forbid
+                - Replace
                 type: string
               failedJobsHistoryLimit:
                 format: int32
+                minimum: 0
                 type: integer
               jobTemplate:
                 description: JobTemplateSpec describes the data a Job should have
@@ -6668,12 +6673,15 @@ spec:
                     type: object
                 type: object
               schedule:
+                minLength: 0
                 type: string
               startingDeadlineSeconds:
                 format: int64
+                minimum: 0
                 type: integer
               successfulJobsHistoryLimit:
                 format: int32
+                minimum: 0
                 type: integer
               suspend:
                 type: boolean
@@ -6730,6 +6738,8 @@ spec:
         type: object
     served: true
     storage: true
+    subresources:
+      status: {}
 status:
   acceptedNames:
     kind: ""
