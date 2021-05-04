@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+// +kubebuilder:docs-gen:collapse=Apache License
 
 package controllers
 
@@ -54,8 +55,13 @@ type Clock interface {
 	Now() time.Time
 }
 
+// +kubebuilder:docs-gen:collapse=Clock
+
 // +kubebuilder:rbac:groups=batch.github.com,resources=cronjobs,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=batch.github.com,resources=cronjobs/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=batch.github.com,resources=cronjobs/finalizers,verbs=update
+// +kubebuilder:rbac:groups=batch,resources=jobs,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=batch,resources=jobs/status,verbs=get
 
 // heart of controller (reconciler logic)
 var (
@@ -90,6 +96,7 @@ func (r *CronJobReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 
 		return false, ""
 	}
+	// +kubebuilder:docs-gen:collapse=isJobFinished
 	getScheduledTimeForJob := func(job *kbatch.Job) (*time.Time, error) {
 		timeRaw := job.Annotations[scheduledTimeAnnotation]
 		if len(timeRaw) == 0 {
@@ -102,6 +109,7 @@ func (r *CronJobReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 		}
 		return &timeParsed, nil
 	}
+	// +kubebuilder:docs-gen:collapse=getScheduledTimeForJob
 	for i, job := range childJobs.Items {
 		_, finishedType := isJobFinished(&job)
 		switch finishedType {
@@ -218,6 +226,7 @@ func (r *CronJobReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 		}
 		return lastMissed, sched.Next(now), nil
 	}
+	// +kubebuilder:docs-gen:collapse=getNextSchedule
 	missedRun, nextRun, err := getNextSchedule(&cronJob, r.Now())
 	if err != nil {
 		log.Error(err, "unable to figure out CronJob schedule")
@@ -277,6 +286,7 @@ func (r *CronJobReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 
 		return job, nil
 	}
+	// +kubebuilder:docs-gen:collapse=constructJobForCronJob
 	job, err := constructJobForCronJob(&cronJob, missedRun)
 	if err != nil {
 		log.Error(err, "unable to construct job from template")

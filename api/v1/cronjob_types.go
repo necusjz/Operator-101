@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+// +kubebuilder:docs-gen:collapse=Apache License
 
 package v1
 
@@ -22,6 +23,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// +kubebuilder:docs-gen:collapse=Imports
+
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
@@ -30,16 +33,21 @@ type CronJobSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	Schedule                   string                       `json:"schedule"`
-	StartingDeadlineSeconds    *int64                       `json:"startingDeadlineSeconds,omitempty"`
-	ConcurrencyPolicy          ConcurrencyPolicy            `json:"concurrencyPolicy,omitempty"`
-	Suspend                    *bool                        `json:"suspend,omitempty"`
-	JobTemplate                batchv1beta1.JobTemplateSpec `json:"jobTemplate"`
-	SuccessfulJobsHistoryLimit *int32                       `json:"successfulJobsHistoryLimit,omitempty"`
-	FailedJobsHistoryLimit     *int32                       `json:"failedJobsHistoryLimit,omitempty"`
+	// +kubebuilder:validation:MinLength=0
+	Schedule string `json:"schedule"`
+	// +kubebuilder:validation:Minimum=0
+	StartingDeadlineSeconds *int64                       `json:"startingDeadlineSeconds,omitempty"`
+	ConcurrencyPolicy       ConcurrencyPolicy            `json:"concurrencyPolicy,omitempty"`
+	Suspend                 *bool                        `json:"suspend,omitempty"`
+	JobTemplate             batchv1beta1.JobTemplateSpec `json:"jobTemplate"`
+	// +kubebuilder:validation:Minimum=0
+	SuccessfulJobsHistoryLimit *int32 `json:"successfulJobsHistoryLimit,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	FailedJobsHistoryLimit *int32 `json:"failedJobsHistoryLimit,omitempty"`
 }
 
 // ConcurrencyPolicy describes how the job will be handled
+// +kubebuilder:validation:Enum=Allow;Forbid;Replace
 type ConcurrencyPolicy string
 
 const (
@@ -58,6 +66,7 @@ type CronJobStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
 
 // CronJob is the Schema for the cronjobs API
 type CronJob struct {
@@ -80,3 +89,5 @@ type CronJobList struct {
 func init() {
 	SchemeBuilder.Register(&CronJob{}, &CronJobList{})
 }
+
+// +kubebuilder:docs-gen:collapse=Root Object Definitions
