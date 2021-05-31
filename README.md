@@ -1,8 +1,8 @@
-# Operator-101
+# Kubernetes Operator 101
 A Kubernetes Operator tutorial based on Kubebuilder.
 
 It will take you building to a full-featured cronjob controller step by step:
-![](https://github.com/snlndod/mPOST/blob/master/Operator-101/00.png)
+![](https://github.com/necusjz/p/blob/master/Operator-101/00.png)
 
 ## Installation
 There are some prerequisites that need to be installed in advance.
@@ -23,6 +23,7 @@ $ export GO111MODULE=on
 Verify that Go has installed successfully:
 ```
 $ go version
+
 go version go1.15.9 linux/amd64
 ```
 
@@ -92,7 +93,7 @@ It covers initialization, development, deployment and testing.
 ### Initialization 
 1. Tell Go and kubebuilder the base import path of our module:
     ```
-    $ go mod init github.com/snlndod/Operator-101
+    $ go mod init github.com/necusjz/Operator-101
     ```
 2. Scaffold out a new project:
     ```
@@ -104,8 +105,8 @@ It covers initialization, development, deployment and testing.
     ```
 
 ### Development
-1. [Design CronJob API](https://github.com/snlndod/Operator-101/blob/main/api/v1/cronjob_types.go);
-2. [Implement CronJob Controller](https://github.com/snlndod/Operator-101/blob/main/controllers/cronjob_controller.go);
+1. [Design CronJob API](https://github.com/necusjz/Operator-101/blob/main/api/v1/cronjob_types.go);
+2. [Implement CronJob Controller](https://github.com/necusjz/Operator-101/blob/main/controllers/cronjob_controller.go);
 
 ### Deployment
 1. Install CRDs and run the controller locally:
@@ -119,13 +120,13 @@ It covers initialization, development, deployment and testing.
     ```
 3. Build/Push our image and deploy the controller to cluster:
     ```
-    $ make docker-build docker-push IMG=snlndod/cronjob:latest
-    $ make deploy IMG=snlndod/cronjob:latest
+    $ make docker-build docker-push IMG=necusjz/cronjob:latest
+    $ make deploy IMG=necusjz/cronjob:latest
     ```
 
 ### Testing
-1. [Setup Test Environment](https://github.com/snlndod/Operator-101/blob/main/controllers/suite_test.go);
-2. [Test Controller's Behavior](https://github.com/snlndod/Operator-101/blob/main/controllers/suite_test.go);
+1. [Setup Test Environment](https://github.com/necusjz/Operator-101/blob/main/controllers/suite_test.go);
+2. [Test Controller's Behavior](https://github.com/necusjz/Operator-101/blob/main/controllers/suite_test.go);
 
 ## Miscellaneous
 Execute integration tests and compile:
@@ -160,4 +161,4 @@ $ make uninstall
 We love contributions! Before submitting a Pull Request, it's always good to start with a new issue first.
 
 ## License
-This repository is licensed under Apache 2.0. Full license text is available in [LICENSE](https://github.com/snlndod/Operator-101/blob/main/LICENSE).
+This repository is licensed under Apache 2.0. Full license text is available in [LICENSE](https://github.com/necusjz/Operator-101/blob/main/LICENSE).

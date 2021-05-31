@@ -30,7 +30,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 
-	cronjobv1 "github.com/snlndod/Operator-101/api/v1"
+	cronjobv1 "github.com/necusjz/Operator-101/api/v1"
 )
 
 // +kubebuilder:docs-gen:collapse=Imports

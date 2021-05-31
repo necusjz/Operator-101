@@ -33,7 +33,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	batchv1 "github.com/snlndod/Operator-101/api/v1"
+	batchv1 "github.com/necusjz/Operator-101/api/v1"
 )
 
 // CronJobReconciler reconciles a CronJob object

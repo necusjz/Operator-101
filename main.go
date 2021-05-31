@@ -26,8 +26,8 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	batchv1 "github.com/snlndod/Operator-101/api/v1"
-	"github.com/snlndod/Operator-101/controllers"
+	batchv1 "github.com/necusjz/Operator-101/api/v1"
+	"github.com/necusjz/Operator-101/controllers"
 	// +kubebuilder:scaffold:imports
 )
 

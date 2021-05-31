@@ -1,5 +1,5 @@
 domain: github.com
-repo: github.com/snlndod/Operator-101
+repo: github.com/necusjz/Operator-101
 resources:
 - group: batch
   kind: CronJob

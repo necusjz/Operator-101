@@ -1,4 +1,4 @@
-module github.com/snlndod/Operator-101
+module github.com/necusjz/Operator-101
 
 go 1.13
 
